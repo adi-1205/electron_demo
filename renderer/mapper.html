@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div style="display: flex; justify-content: space-between;">
+        <a href="./index.html">Go back</a>
+        <span>Map your fields as per CSV</span>
+        <button id="saveButton" style="
+            background-color: #4CAF50; 
+            color: white; 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;"
+            onclick="saveFields()"
+            >
+            Save
+        </button>
+    </div>
+    <table>
+        <!-- Employee Information -->
+        <tr>
+            <td>Employee Name</td>
+            <td><input type="text" name="employee_name"></td>
+        </tr>
+        <tr>
+            <td>Employee Code</td>
+            <td><input type="text" name="employee_code"></td>
+        </tr>
+        <tr>
+            <td>Joining Date</td>
+            <td><input type="text" name="joining_date"></td>
+        </tr>
+        <tr>
+            <td>Designation</td>
+            <td><input type="text" name="designation"></td>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td><input type="text" name="gender"></td>
+        </tr>
+        <tr>
+            <td>Bank Name</td>
+            <td><input type="text" name="bank_name"></td>
+        </tr>
+        <tr>
+            <td>Bank A/C No.</td>
+            <td><input type="text" name="bank_ac_no"></td>
+        </tr>
+        <tr>
+            <td>UAN No.</td>
+            <td><input type="text" name="uan_no"></td>
+        </tr>
+        <tr>
+            <td>ESIC No.</td>
+            <td><input type="text" name="esic_no"></td>
+        </tr>
+
+        <!-- Payslip Details -->
+        <tr>
+            <td>Month</td>
+            <td><input type="text" name="month"></td>
+        </tr>
+        <tr>
+            <td>Working Days</td>
+            <td><input type="text" name="working_days"></td>
+        </tr>
+        <tr>
+            <td>Total Paid Days</td>
+            <td><input type="text" name="total_paid_days"></td>
+        </tr>
+
+        <!-- Earnings -->
+        <tr>
+            <td>Basic</td>
+            <td><input type="text" name="basic"></td>
+        </tr>
+        <tr>
+            <td>HRA</td>
+            <td><input type="text" name="hra"></td>
+        </tr>
+        <tr>
+            <td>Conveyance Allowance</td>
+            <td><input type="text" name="conveyance_allowance"></td>
+        </tr>
+        <tr>
+            <td>Special Allowance</td>
+            <td><input type="text" name="special_allowance"></td>
+        </tr>
+        <tr>
+            <td>Leave Encashment</td>
+            <td><input type="text" name="leave_encashment"></td>
+        </tr>
+        <tr>
+            <td>SD Reimbursement</td>
+            <td><input type="text" name="sd_reimbursement"></td>
+        </tr>
+        <tr>
+            <td>Arrears</td>
+            <td><input type="text" name="arrears"></td>
+        </tr>
+        <tr>
+            <td>Medical</td>
+            <td><input type="text" name="medical"></td>
+        </tr>
+        <tr>
+            <td>Education</td>
+            <td><input type="text" name="education"></td>
+        </tr>
+
+        <!-- Deductions -->
+        <tr>
+            <td>Provident Fund</td>
+            <td><input type="text" name="pf"></td>
+        </tr>
+        <tr>
+            <td>ESI</td>
+            <td><input type="text" name="esi"></td>
+        </tr>
+        <tr>
+            <td>Professional Tax</td>
+            <td><input type="text" name="professional_tax"></td>
+        </tr>
+        <tr>
+            <td>TDS</td>
+            <td><input type="text" name="tds"></td>
+        </tr>
+        <tr>
+            <td>Security Deposit</td>
+            <td><input type="text" name="security_deposit"></td>
+        </tr>
+        <tr>
+            <td>Advances</td>
+            <td><input type="text" name="advances"></td>
+        </tr>
+
+        <!-- Summary -->
+        <tr>
+            <td>Total Earnings</td>
+            <td><input type="text" name="total_earnings" readonly></td>
+        </tr>
+        <tr>
+            <td>Total Deductions</td>
+            <td><input type="text" name="total_deductions" readonly></td>
+        </tr>
+        <tr>
+            <td>Net Pay (in Figures)</td>
+            <td><input type="text" name="net_pay_figures" readonly></td>
+        </tr>
+        <tr>
+            <td>Net Pay (in Words)</td>
+            <td><input type="text" name="net_pay_words" readonly></td>
+        </tr>
+    </table>
+
+
+    <script>
+        function saveFields() {
+            const fieldsMap = {}
+            const inputs = document.querySelectorAll('input')
+            inputs.forEach(input => {
+                const name = input.name
+                const value = input.value
+                fieldsMap[name] = value
+            })
+            localStorage.setItem('fieldsMap', JSON.stringify(fieldsMap))
+        }
+        existing = parseExistingFields()
+        const inputs = document.querySelectorAll('input')
+        inputs.forEach(input => {
+            const name = input.name
+            if (existing && existing[name]) {
+                input.value = existing[name]
+            }
+        })
+
+        function parseExistingFields() {
+            try {
+                const existing = JSON.parse(localStorage.getItem('fieldsMap'));
+                return existing;
+            } catch (error) {
+                return {};
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSV Payslip Uploader</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        #table-wrapper {
+            width: 100%;
+            overflow-x: scroll;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Upload Payslip CSV</h1>
+        <input type="file" accept=".csv" id="csvFileInput" />
+        <a href="./mapper.html">Configure CSV fields</a>
+        <div id="table-wrapper">
+            <table id="csvTable">
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Employee Code</th>
+                    <th>Joining Date</th>
+                    <th>Designation</th>
+                    <th>Gender</th>
+                    <th>Bank Name</th>
+                    <th>Bank A/C No.</th>
+                    <th>UAN No.</th>
+                    <th>ESIC No.</th>
+                    <th>Month</th>
+                    <th>Working Days</th>
+                    <th>Total Paid Days</th>
+                    <th>Basic</th>
+                    <th>HRA</th>
+                    <th>Conveyance Allowance</th>
+                    <th>Special Allowance</th>
+                    <th>Leave Encashment</th>
+                    <th>SD Reimbursement</th>
+                    <th>Arrears</th>
+                    <th>Medical</th>
+                    <th>Education</th>
+                    <th>Provident Fund</th>
+                    <th>ESI</th>
+                    <th>Professional Tax</th>
+                    <th>TDS</th>
+                    <th>Security Deposit</th>
+                    <th>Advances</th>
+                    <th>Total Earnings</th>
+                    <th>Total Deductions</th>
+                    <th>Net Pay (in Figures)</th>
+                    <th>Net Pay (in Words)</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('csvFileInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const text = e.target.result;
+                displayCSV(text);
+            };
+            reader.readAsText(file);
+        });
+
+        function parseExistingFields() {
+            try {
+                const existing = JSON.parse(localStorage.getItem('fieldsMap'));
+                return existing;
+            } catch (error) {
+                return {};
+            }
+        }
+
+        function csvToObjectArray(csv) {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split('\t');
+
+            return lines.slice(1).map(line => {
+                const values = line.split('\t');
+                const obj = {};
+                headers.forEach((header, index) => {
+                    obj[header.trim()] = values[index]?.trim();
+                });
+                return obj;
+            });
+        }
+
+        function displayCSV(csv) {
+            const table = document.getElementById('csvTable');
+            const fields = parseExistingFields();
+            const rows = csvToObjectArray(csv)
+            rows.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');
+                for (let field in fields) {
+                    const val = row[fields[field]] || '-';
+                    const td = document.createElement('td');
+                    td.textContent = val;
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            })
+
+            /*
+            const rows = csv.trim().split('\n').map(row => row.split('\t'));
+
+            const table = document.getElementById('csvTable');
+            table.innerHTML = '';
+
+            rows.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');
+
+                for (let field in fields) {
+
+                }
+
+                row.forEach((cell, cellIndex) => {
+                    if (!cellIndex) {
+                        const td = document.createElement(rowIndex === 0 ? 'th' : 'td');
+                        td.textContent = rowIndex ? rowIndex : '#';
+                        tr.appendChild(td);
+                    }
+
+                    const td = document.createElement(rowIndex === 0 ? 'th' : 'td');
+                    td.textContent = cell.trim();
+                    tr.appendChild(td);
+                });
+                const td = document.createElement('td');
+                const button = document.createElement('button');
+                button.textContent = 'Download';
+                td.appendChild(button);
+                tr.appendChild(td);
+                table.appendChild(tr);
+            });
+            */
+        }
+    </script>
+</body>
+
+</html>
